@@ -1,471 +1,789 @@
 <!DOCTYPE html>
 <html lang="pl">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Secret Stuleja - Świąteczne Losowanie</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Mountains+of+Christmas:wght@700&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <meta
+      name="description"
+      content="Generator par świątecznych online - Secret Santa"
+    />
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Mountains+of+Christmas:wght@700&family=Roboto:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+
     <style>
-        :root {
-            --red: #D42426;
-            --green: #165B33;
-            --gold: #F8B229;
-            --snow: #F8F8F8;
-            --dark: #2C3E50;
+      :root {
+        --color-red: #d42426;
+        --color-red-hover: #b31b1d;
+        --color-green: #165b33;
+        --color-gold: #f8b229;
+        --color-snow: #f8f8f8;
+        --color-dark: #2c3e50;
+        --color-white: #ffffff;
+        --color-border: #dddddd;
+        --shadow-standard: 0 10px 30px rgba(0, 0, 0, 0.3);
+      }
+
+      body {
+        font-family: "Roboto", sans-serif;
+        background-color: var(--color-green);
+        color: var(--color-dark);
+        margin: 0;
+        padding: 20px;
+        min-height: 100vh;
+        box-sizing: border-box;
+        display: flex;
+        /* SVG background optimized */
+        background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI1MCIgaGVpZ2h0PSI1MCIgdmlld0JveD0iMCAwIDUwIDUwIj48ZyBmaWxsPSIjZmZmIiBmaWxsLW9wYWNpdHk9IjAuMSI+PGNpcmNsZSBjeD0iMjUiIGN5PSIyNSIgcj0iMiIvPjwvZz48L3N2Zz4=");
+        overflow-x: hidden;
+      }
+
+      /* --- Components --- */
+
+      /* Container */
+      .app-container {
+        background: var(--color-snow);
+        max-width: 600px;
+        width: 100%;
+        padding: 30px;
+        border-radius: 15px;
+        box-shadow: var(--shadow-standard);
+        position: relative;
+        z-index: 10;
+        border: 5px solid var(--color-red);
+        margin: auto;
+      }
+
+      /* Typography */
+      h1,
+      h2,
+      h3 {
+        font-family: "Mountains of Christmas", cursive;
+        color: var(--color-red);
+        text-align: center;
+        margin-top: 0;
+      }
+
+      h1 {
+        font-size: 3em;
+        text-shadow: 2px 2px var(--color-gold);
+        line-height: 1.2;
+      }
+
+      .text-center {
+        text-align: center;
+      }
+      .text-muted {
+        font-size: 0.9em;
+        color: #666;
+      }
+      .text-error {
+        color: var(--color-red);
+        font-weight: bold;
+      }
+      .mt-2 {
+        margin-top: 20px;
+      }
+      .mb-1 {
+        margin-bottom: 10px;
+      }
+
+      /* Sections */
+      .card-section {
+        margin-bottom: 25px;
+        padding: 20px;
+        background: var(--color-white);
+        border-radius: 10px;
+        border: 1px solid var(--color-border);
+      }
+
+      /* Inputs & Forms */
+      .input-group {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 10px;
+        flex-wrap: wrap;
+      }
+
+      input,
+      select {
+        flex: 1;
+        padding: 10px;
+        border: 2px solid var(--color-green);
+        border-radius: 5px;
+        font-size: 16px;
+        min-width: 100px;
+      }
+
+      /* Buttons */
+      button {
+        background-color: var(--color-red);
+        color: var(--color-white);
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-weight: bold;
+        font-size: 16px;
+        transition: transform 0.1s, background-color 0.2s;
+        white-space: nowrap;
+      }
+
+      button:hover {
+        background-color: var(--color-red-hover);
+        transform: scale(1.05);
+      }
+
+      button:active {
+        transform: scale(0.95);
+      }
+
+      button.btn-secondary {
+        background-color: var(--color-green);
+      }
+      button.btn-small {
+        font-size: 0.8em;
+        padding: 5px 10px;
+        margin-left: 10px;
+      }
+      button.btn-block {
+        width: 100%;
+        padding: 15px;
+        font-size: 1.2em;
+      }
+
+      /* Lists */
+      ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+      }
+
+      li {
+        background: #f0f0f0;
+        margin: 5px 0;
+        padding: 10px;
+        border-radius: 5px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .btn-remove {
+        color: var(--color-red);
+        cursor: pointer;
+        font-weight: bold;
+        padding: 0 10px;
+        background: none;
+        border: none;
+        font-size: 1.2em;
+      }
+      .btn-remove:hover {
+        background: none;
+        transform: scale(1.2);
+      }
+
+      /* Results */
+      .result-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px;
+        border-bottom: 1px solid #eee;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+
+      .blur-reveal {
+        filter: blur(4px);
+        cursor: help;
+        transition: filter 0.3s;
+      }
+      .blur-reveal:hover {
+        filter: blur(0);
+      }
+
+      /* Recipient View */
+      .gift-box {
+        font-size: 100px;
+        cursor: pointer;
+        animation: bounce 2s infinite;
+        user-select: none;
+      }
+
+      .reveal-text {
+        font-size: 2em;
+        color: var(--color-green);
+        font-weight: bold;
+        margin-top: 20px;
+        animation: fadeIn 1s forwards;
+      }
+
+      /* Utilities */
+      .hidden {
+        display: none !important;
+      }
+
+      /* Toast Notification */
+      .toast {
+        position: fixed;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: var(--color-dark);
+        color: white;
+        padding: 10px 20px;
+        border-radius: 20px;
+        opacity: 0;
+        transition: opacity 0.3s;
+        pointer-events: none;
+        z-index: 100;
+      }
+      .toast.show {
+        opacity: 1;
+      }
+
+      /* Animations */
+      .snowflake {
+        position: fixed;
+        top: -10px;
+        color: #fff;
+        user-select: none;
+        z-index: 0;
+        opacity: 0.7;
+        pointer-events: none;
+        animation-name: fall;
+        animation-timing-function: linear;
+        animation-iteration-count: infinite;
+      }
+
+      @keyframes fall {
+        to {
+          transform: translateY(100vh);
         }
-
-        body {
-            font-family: 'Roboto', sans-serif;
-            background-color: var(--green);
-            color: var(--dark);
-            margin: 0;
-            padding: 20px;
-            min-height: 100vh;
-            box-sizing: border-box;
-            display: flex;
-            background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI1MCIgaGVpZ2h0PSI1MCIgdmlld0JveD0iMCAwIDUwIDUwIj48ZyBmaWxsPSIjZmZmIiBmaWxsLW9wYWNpdHk9IjAuMSI+PGNpcmNsZSBjeD0iMjUiIGN5PSIyNSIgcj0iMiIvPjwvZz48L3N2Zz4=');
-            overflow-x: hidden;
+      }
+      @keyframes bounce {
+        0%,
+        20%,
+        50%,
+        80%,
+        100% {
+          transform: translateY(0);
         }
-
-        /* Efekt śniegu CSS */
-        .snowflake {
-            position: fixed;
-            top: -10px;
-            color: #fff;
-            font-size: 1em;
-            font-family: Arial;
-            text-shadow: 0 0 1px #000;
-            animation-name: fall;
-            animation-timing-function: linear;
-            animation-iteration-count: infinite;
-            z-index: 0;
-            opacity: 0.7;
-            pointer-events: none;
+        40% {
+          transform: translateY(-20px);
         }
-
-        @keyframes fall {
-            to { transform: translateY(100vh); }
+        60% {
+          transform: translateY(-10px);
         }
-
-        .container {
-            background: var(--snow);
-            max-width: 600px;
-            width: 100%;
-            padding: 30px;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-            position: relative;
-            z-index: 10;
-            border: 5px solid var(--red);
-            margin: auto; 
+      }
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
         }
-
-        h1, h2, h3 {
-            font-family: 'Mountains of Christmas', cursive;
-            color: var(--red);
-            text-align: center;
-            margin-top: 0;
+        to {
+          opacity: 1;
         }
-
-        h1 { font-size: 3em; text-shadow: 2px 2px var(--gold); line-height: 1.2; }
-
-        .section {
-            margin-bottom: 25px;
-            padding: 20px;
-            background: #fff;
-            border-radius: 10px;
-            border: 1px solid #ddd;
-        }
-
-        .input-group {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 10px;
-            flex-wrap: wrap;
-        }
-
-        input, select {
-            flex: 1;
-            padding: 10px;
-            border: 2px solid var(--green);
-            border-radius: 5px;
-            font-size: 16px;
-            min-width: 100px;
-        }
-
-        button {
-            background-color: var(--red);
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-weight: bold;
-            font-size: 16px;
-            transition: transform 0.1s;
-            white-space: nowrap;
-        }
-
-        button:hover { background-color: #b31b1d; transform: scale(1.05); }
-        button.secondary { background-color: var(--green); }
-        button.copy-btn { font-size: 0.8em; padding: 5px 10px; margin-left: 10px; }
-
-        ul { list-style: none; padding: 0; margin: 0; }
-        li {
-            background: #f0f0f0;
-            margin: 5px 0;
-            padding: 10px;
-            border-radius: 5px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .remove-btn { color: var(--red); cursor: pointer; font-weight: bold; padding: 0 10px; }
-        
-        .result-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px;
-            border-bottom: 1px solid #eee;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-
-        .hidden { display: none; }
-
-        #recipient-view { text-align: center; }
-        .gift-box {
-            font-size: 100px;
-            cursor: pointer;
-            animation: bounce 2s infinite;
-            user-select: none;
-        }
-        
-        @keyframes bounce {
-            0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
-            40% {transform: translateY(-20px);}
-            60% {transform: translateY(-10px);}
-        }
-
-        .reveal-text {
-            font-size: 2em;
-            color: var(--green);
-            font-weight: bold;
-            display: none;
-            margin-top: 20px;
-            animation: fadeIn 1s;
-        }
-
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-
-        .toast {
-            position: fixed;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: var(--dark);
-            color: white;
-            padding: 10px 20px;
-            border-radius: 20px;
-            opacity: 0;
-            transition: opacity 0.3s;
-            pointer-events: none;
-            z-index: 100;
-        }
-        .toast.show { opacity: 1; }
+      }
     </style>
-</head>
-<body>
-
+  </head>
+  <body>
     <div id="snow-container"></div>
 
-    <div class="container">
-        <div id="admin-view">
-            <h1>Secret Stuleja 🎄</h1>
-            <p style="text-align: center;">Generator par świątecznych</p>
+    <main class="app-container">
+      <!-- Admin View: Setting up the game -->
+      <section id="admin-view">
+        <header>
+          <h1>Secret Stuleja 🎄</h1>
+          <p class="text-center">Generator par świątecznych</p>
+        </header>
 
-            <div class="section">
-                <h3>1. Dodaj Uczestników</h3>
-                <div class="input-group">
-                    <input type="text" id="new-participant" placeholder="Imię uczestnika">
-                    <button onclick="addParticipant()">Dodaj</button>
-                </div>
-                <ul id="participants-list"></ul>
-            </div>
-
-            <div class="section">
-                <h3>2. Zablokuj Pary (Opcjonalne)</h3>
-                <p style="font-size: 0.9em; color: #666; margin-bottom: 10px;">Wybierz kto NIE MOŻE wylosować kogo.</p>
-                <div class="input-group">
-                    <select id="exclude-giver"><option value="">Kto...</option></select>
-                    <span style="align-self: center; font-weight: bold;">⇏</span>
-                    <select id="exclude-receiver"><option value="">kogo.</option></select>
-                    <button class="secondary" onclick="addExclusion()">Zablokuj</button>
-                </div>
-                <ul id="exclusions-list"></ul>
-            </div>
-
-            <div style="text-align: center;">
-                <button onclick="drawPairs()" style="font-size: 1.2em; padding: 15px 30px; width: 100%;">🎅 LOSUJ PARY 🎅</button>
-                <p id="error-msg" style="color: var(--red); font-weight: bold; display: none; margin-top: 10px;"></p>
-            </div>
-
-            <div id="results-section" class="section hidden" style="margin-top: 20px;">
-                <h3>3. Wyniki i Linki</h3>
-                <p style="text-align: center; font-size: 0.9em;">Skopiuj link i wyślij go odpowiedniej osobie.</p>
-                <div id="results-list"></div>
-            </div>
+        <div class="card-section">
+          <h3>1. Dodaj Uczestników</h3>
+          <!-- Using a form allows native "Enter" key submission -->
+          <form id="form-add-participant" class="input-group">
+            <input
+              type="text"
+              id="input-participant-name"
+              placeholder="Imię uczestnika"
+              autocomplete="off"
+              required
+            />
+            <button type="submit">Dodaj</button>
+          </form>
+          <ul id="list-participants"></ul>
         </div>
 
-        <div id="recipient-view" class="hidden">
-            <h1>Secret Stuleja 🎁</h1>
-            <h2>Cześć <span id="santa-name"></span>!</h2>
-            <p>Jesteś uczestnikiem tajnego losowania.</p>
-            <p>Kliknij w prezent, aby zobaczyć, komu kupujesz prezent:</p>
-            
-            <div class="gift-box" onclick="revealTarget()">🎁</div>
-            
-            <div id="target-reveal" class="reveal-text">
-                Wylosowałeś/aś:<br>
-                <span style="font-size: 1.5em; color: var(--red);" id="target-name"></span>
-                <br>🎄 Powodzenia! 🎄
-            </div>
+        <div class="card-section">
+          <h3>2. Zablokuj Pary (Opcjonalne)</h3>
+          <p class="text-muted mb-1">Wybierz kto NIE MOŻE wylosować kogo.</p>
+          <form id="form-add-exclusion" class="input-group">
+            <select id="select-giver" required>
+              <option value="" disabled selected>Kto...</option>
+            </select>
+            <span style="align-self: center; font-weight: bold">⇏</span>
+            <select id="select-receiver" required>
+              <option value="" disabled selected>kogo.</option>
+            </select>
+            <button type="submit" class="btn-secondary">Zablokuj</button>
+          </form>
+          <ul id="list-exclusions"></ul>
         </div>
-    </div>
+
+        <div class="text-center">
+          <button id="btn-draw" class="btn-block">🎅 LOSUJ PARY 🎅</button>
+          <p id="error-msg" class="text-error hidden mt-2"></p>
+        </div>
+
+        <div id="results-section" class="card-section hidden mt-2">
+          <h3>3. Wyniki i Linki</h3>
+          <p class="text-center text-muted">
+            Skopiuj link i wyślij go odpowiedniej osobie.
+          </p>
+          <div id="list-results"></div>
+        </div>
+      </section>
+
+      <!-- Recipient View: Seeing the result -->
+      <section id="recipient-view" class="hidden text-center">
+        <header>
+          <h1>Secret Stuleja 🎁</h1>
+          <h2>Cześć <span id="display-santa-name"></span>!</h2>
+        </header>
+        <p>Jesteś uczestnikiem tajnego losowania.</p>
+        <p>Kliknij w prezent, aby zobaczyć, komu kupujesz prezent:</p>
+
+        <div id="gift-box" class="gift-box">🎁</div>
+
+        <div id="target-reveal" class="reveal-text hidden">
+          Wylosowałeś/aś:<br />
+          <span
+            style="font-size: 1.5em; color: var(--color-red)"
+            id="display-target-name"
+          ></span>
+          <br />🎄 Powodzenia! 🎄
+        </div>
+      </section>
+    </main>
 
     <div id="toast" class="toast">Skopiowano do schowka!</div>
 
     <script>
-        let participants = [];
-        let exclusions = []; 
-
-        window.onload = function() {
-            createSnow();
-            
-            // OBSŁUGA ENTER DLA DODAWANIA UCZESTNIKÓW
-            document.getElementById('new-participant').addEventListener('keypress', function (e) {
-                if (e.key === 'Enter') {
-                    addParticipant();
-                }
-            });
-
-            const urlParams = new URLSearchParams(window.location.search);
-            const encodedSanta = urlParams.get('s');
-            const encodedTarget = urlParams.get('t');
-
-            if (encodedSanta && encodedTarget) {
-                document.getElementById('admin-view').classList.add('hidden');
-                document.getElementById('recipient-view').classList.remove('hidden');
-                
-                try {
-                    const santa = decodeURIComponent(atob(encodedSanta));
-                    const target = decodeURIComponent(atob(encodedTarget));
-                    
-                    document.getElementById('santa-name').innerText = santa;
-                    document.getElementById('target-name').innerText = target;
-                } catch (e) {
-                    alert("Błędny link!");
-                    window.location.href = window.location.pathname;
-                }
-            }
+      /**
+       * Secret Santa Application
+       * Refactored for Clean Code and Security (XSS prevention)
+       */
+      document.addEventListener("DOMContentLoaded", () => {
+        // --- State Management ---
+        const state = {
+          participants: [],
+          exclusions: [],
         };
 
-        function addParticipant() {
-            const input = document.getElementById('new-participant');
-            const name = input.value.trim();
-            
-            if (name && !participants.includes(name)) {
-                participants.push(name);
-                input.value = '';
-                renderLists();
-            } else if (participants.includes(name)) {
-                alert('Ta osoba jest już na liście!');
+        // --- DOM Elements ---
+        const elements = {
+          views: {
+            admin: document.getElementById("admin-view"),
+            recipient: document.getElementById("recipient-view"),
+            results: document.getElementById("results-section"),
+          },
+          forms: {
+            addParticipant: document.getElementById("form-add-participant"),
+            addExclusion: document.getElementById("form-add-exclusion"),
+          },
+          inputs: {
+            participantName: document.getElementById("input-participant-name"),
+            giverSelect: document.getElementById("select-giver"),
+            receiverSelect: document.getElementById("select-receiver"),
+          },
+          lists: {
+            participants: document.getElementById("list-participants"),
+            exclusions: document.getElementById("list-exclusions"),
+            results: document.getElementById("list-results"),
+          },
+          buttons: {
+            draw: document.getElementById("btn-draw"),
+          },
+          display: {
+            error: document.getElementById("error-msg"),
+            santaName: document.getElementById("display-santa-name"),
+            targetName: document.getElementById("display-target-name"),
+            giftBox: document.getElementById("gift-box"),
+            revealArea: document.getElementById("target-reveal"),
+          },
+          snowContainer: document.getElementById("snow-container"),
+          toast: document.getElementById("toast"),
+        };
+
+        // --- Initialization ---
+        init();
+
+        function init() {
+          createSnowEffect();
+          checkUrlParams();
+          bindEvents();
+        }
+
+        function bindEvents() {
+          elements.forms.addParticipant.addEventListener(
+            "submit",
+            handleAddParticipant
+          );
+          elements.forms.addExclusion.addEventListener(
+            "submit",
+            handleAddExclusion
+          );
+          elements.buttons.draw.addEventListener("click", handleDrawPairs);
+          elements.display.giftBox.addEventListener("click", revealTarget);
+        }
+
+        // --- Logic: URL Parsing ---
+        function checkUrlParams() {
+          const urlParams = new URLSearchParams(window.location.search);
+          const encodedSanta = urlParams.get("s");
+          const encodedTarget = urlParams.get("t");
+
+          if (encodedSanta && encodedTarget) {
+            elements.views.admin.classList.add("hidden");
+            elements.views.recipient.classList.remove("hidden");
+
+            try {
+              // Security Note: atob is not encryption, just encoding.
+              const santa = decodeURIComponent(atob(encodedSanta));
+              const target = decodeURIComponent(atob(encodedTarget));
+
+              // Safe text insertion
+              elements.display.santaName.textContent = santa;
+              elements.display.targetName.textContent = target;
+            } catch (e) {
+              alert("Błędny link!");
+              window.location.href = window.location.pathname;
             }
+          }
+        }
+
+        // --- Logic: Participants ---
+        function handleAddParticipant(e) {
+          e.preventDefault();
+          const name = elements.inputs.participantName.value.trim();
+
+          if (!name) return;
+
+          if (state.participants.includes(name)) {
+            alert("Ta osoba jest już na liście!");
+            return;
+          }
+
+          state.participants.push(name);
+          elements.inputs.participantName.value = "";
+          updateUI();
         }
 
         function removeParticipant(name) {
-            participants = participants.filter(p => p !== name);
-            exclusions = exclusions.filter(e => e.giver !== name && e.receiver !== name);
-            renderLists();
+          state.participants = state.participants.filter((p) => p !== name);
+          // Remove related exclusions
+          state.exclusions = state.exclusions.filter(
+            (ex) => ex.giver !== name && ex.receiver !== name
+          );
+          updateUI();
         }
 
-        function addExclusion() {
-            const giver = document.getElementById('exclude-giver').value;
-            const receiver = document.getElementById('exclude-receiver').value;
+        // --- Logic: Exclusions ---
+        function handleAddExclusion(e) {
+          e.preventDefault();
+          const giver = elements.inputs.giverSelect.value;
+          const receiver = elements.inputs.receiverSelect.value;
 
-            if (giver && receiver && giver !== receiver) {
-                const exists = exclusions.some(e => e.giver === giver && e.receiver === receiver);
-                if (!exists) {
-                    exclusions.push({giver, receiver});
-                    renderLists();
-                }
+          if (giver && receiver && giver !== receiver) {
+            const exists = state.exclusions.some(
+              (ex) => ex.giver === giver && ex.receiver === receiver
+            );
+            if (!exists) {
+              state.exclusions.push({ giver, receiver });
+              updateUI();
             }
+          }
         }
 
         function removeExclusion(index) {
-            exclusions.splice(index, 1);
-            renderLists();
+          state.exclusions.splice(index, 1);
+          updateUI();
         }
 
-        function renderLists() {
-            const ul = document.getElementById('participants-list');
-            ul.innerHTML = '';
-            participants.forEach(p => {
-                ul.innerHTML += `<li>${p} <span class="remove-btn" onclick="removeParticipant('${p}')">×</span></li>`;
+        // --- UI Updates ---
+        function updateUI() {
+          // 1. Render Participants List
+          elements.lists.participants.innerHTML = "";
+          state.participants.forEach((name) => {
+            const li = document.createElement("li");
+            li.textContent = name + " ";
+
+            const removeBtn = document.createElement("button");
+            removeBtn.className = "btn-remove";
+            removeBtn.textContent = "×";
+            removeBtn.onclick = () => removeParticipant(name); // Event delegation preferred in large apps, ok here
+
+            li.appendChild(removeBtn);
+            elements.lists.participants.appendChild(li);
+          });
+
+          // 2. Update Select Options
+          const updateSelect = (selectElement) => {
+            const currentVal = selectElement.value;
+            selectElement.innerHTML =
+              '<option value="" disabled selected>Wybierz...</option>';
+            state.participants.forEach((name) => {
+              const option = document.createElement("option");
+              option.value = name;
+              option.textContent = name;
+              selectElement.appendChild(option);
             });
+            // Restore selection if still valid
+            if (state.participants.includes(currentVal)) {
+              selectElement.value = currentVal;
+            }
+          };
 
-            const selGiver = document.getElementById('exclude-giver');
-            const selRec = document.getElementById('exclude-receiver');
+          updateSelect(elements.inputs.giverSelect);
+          updateSelect(elements.inputs.receiverSelect);
 
-            selGiver.innerHTML = '<option value="">Kto...</option>';
-            selRec.innerHTML = '<option value="">kogo.</option>';
+          // Set default placeholders again
+          elements.inputs.giverSelect.firstElementChild.textContent = "Kto...";
+          elements.inputs.receiverSelect.firstElementChild.textContent =
+            "kogo.";
 
-            participants.forEach(p => {
-                selGiver.innerHTML += `<option value="${p}">${p}</option>`;
-                selRec.innerHTML += `<option value="${p}">${p}</option>`;
-            });
+          // 3. Render Exclusions
+          elements.lists.exclusions.innerHTML = "";
+          state.exclusions.forEach((ex, index) => {
+            const li = document.createElement("li");
+            li.innerHTML = `<span><b>${escapeHtml(
+              ex.giver
+            )}</b> ⇏ <b>${escapeHtml(ex.receiver)}</b></span>`;
 
-            const exUl = document.getElementById('exclusions-list');
-            exUl.innerHTML = '';
-            exclusions.forEach((ex, idx) => {
-                exUl.innerHTML += `<li>${ex.giver} ⇏ ${ex.receiver} <span class="remove-btn" onclick="removeExclusion(${idx})">×</span></li>`;
-            });
-            
-            document.getElementById('results-section').classList.add('hidden');
+            const removeBtn = document.createElement("button");
+            removeBtn.className = "btn-remove";
+            removeBtn.textContent = "×";
+            removeBtn.onclick = () => removeExclusion(index);
+
+            li.appendChild(removeBtn);
+            elements.lists.exclusions.appendChild(li);
+          });
+
+          // Hide results if data changed
+          elements.views.results.classList.add("hidden");
         }
 
-        function drawPairs() {
-            const errorMsg = document.getElementById('error-msg');
-            errorMsg.style.display = 'none';
+        // --- Logic: Drawing Algorithm ---
+        function handleDrawPairs() {
+          elements.display.error.classList.add("hidden");
 
-            if (participants.length < 2) {
-                errorMsg.innerText = "Potrzeba co najmniej 2 osób!";
-                errorMsg.style.display = 'block';
-                return;
+          if (state.participants.length < 2) {
+            showError("Potrzeba co najmniej 2 osób!");
+            return;
+          }
+
+          const result = generatePairs(state.participants, state.exclusions);
+
+          if (!result) {
+            showError(
+              "Nie udało się dopasować. Za dużo blokad lub za mało osób!"
+            );
+            return;
+          }
+
+          renderResults(result);
+        }
+
+        function generatePairs(participants, exclusions) {
+          // Monte Carlo approach: Try shuffling until valid
+          const maxAttempts = 2000;
+          const givers = [...participants];
+          let receivers = [];
+
+          for (let attempt = 0; attempt < maxAttempts; attempt++) {
+            receivers = [...participants];
+            shuffleArray(receivers);
+
+            let isValid = true;
+            for (let i = 0; i < givers.length; i++) {
+              const g = givers[i];
+              const r = receivers[i];
+
+              // Rule 1: Cannot draw self
+              if (g === r) {
+                isValid = false;
+                break;
+              }
+
+              // Rule 2: Check exclusions
+              const isBlocked = exclusions.some(
+                (ex) => ex.giver === g && ex.receiver === r
+              );
+              if (isBlocked) {
+                isValid = false;
+                break;
+              }
             }
 
-            let success = false;
-            let givers = [...participants];
-            let receivers = [];
-            
-            for(let attempt = 0; attempt < 1000; attempt++) {
-                receivers = [...participants];
-                shuffleArray(receivers);
-                
-                let isValid = true;
-                for (let i = 0; i < givers.length; i++) {
-                    const g = givers[i];
-                    const r = receivers[i];
-                    
-                    if (g === r) { isValid = false; break; }
-                    const isBlocked = exclusions.some(e => e.giver === g && e.receiver === r);
-                    if (isBlocked) { isValid = false; break; }
-                }
-
-                if (isValid) {
-                    success = true;
-                    break;
-                }
+            if (isValid) {
+              return givers.map((giver, i) => ({
+                giver,
+                receiver: receivers[i],
+              }));
             }
-
-            if (!success) {
-                errorMsg.innerText = "Nie udało się dopasować. Za dużo blokad!";
-                errorMsg.style.display = 'block';
-                return;
-            }
-
-            renderResults(givers, receivers);
+          }
+          return null; // Failed to find solution
         }
 
         function shuffleArray(array) {
-            for (let i = array.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [array[i], array[j]] = [array[j], array[i]];
-            }
+          for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+          }
         }
 
-        function renderResults(givers, receivers) {
-            const container = document.getElementById('results-list');
-            container.innerHTML = '';
-            
-            givers.forEach((giver, index) => {
-                const receiver = receivers[index];
-                const safeGiver = btoa(encodeURIComponent(giver));
-                const safeReceiver = btoa(encodeURIComponent(receiver));
-                
-                const baseUrl = window.location.href.split('?')[0];
-                const link = `${baseUrl}?s=${safeGiver}&t=${safeReceiver}`;
+        function renderResults(pairs) {
+          const container = elements.lists.results;
+          container.innerHTML = "";
 
-                const row = document.createElement('div');
-                row.className = 'result-row';
-                row.innerHTML = `
-                    <div style="flex: 1;">
-                        <strong>${giver}</strong> ➔ <span style="filter: blur(4px); cursor:help" title="${receiver}">???</span>
-                    </div>
-                    <button class="secondary copy-btn" onclick="copyLink('${link}')">Kopiuj Link</button>
-                `;
-                container.appendChild(row);
+          pairs.forEach((pair) => {
+            const safeGiver = btoa(encodeURIComponent(pair.giver));
+            const safeReceiver = btoa(encodeURIComponent(pair.receiver));
+            const baseUrl = window.location.href.split("?")[0];
+            const link = `${baseUrl}?s=${safeGiver}&t=${safeReceiver}`;
+
+            const row = document.createElement("div");
+            row.className = "result-row";
+
+            // Use textContent/innerText for safety
+            const infoDiv = document.createElement("div");
+            infoDiv.style.flex = "1";
+
+            const strong = document.createElement("strong");
+            strong.textContent = pair.giver;
+
+            const arrowText = document.createTextNode(" ➔ ");
+
+            const secretSpan = document.createElement("span");
+            secretSpan.className = "blur-reveal";
+            secretSpan.textContent = "???";
+            secretSpan.title = pair.receiver;
+
+            infoDiv.appendChild(strong);
+            infoDiv.appendChild(arrowText);
+            infoDiv.appendChild(secretSpan);
+
+            const copyBtn = document.createElement("button");
+            copyBtn.className = "btn-secondary btn-small";
+            copyBtn.textContent = "Kopiuj Link";
+            copyBtn.onclick = () => copyToClipboard(link);
+
+            row.appendChild(infoDiv);
+            row.appendChild(copyBtn);
+            container.appendChild(row);
+          });
+
+          elements.views.results.classList.remove("hidden");
+          setTimeout(() => {
+            elements.views.results.scrollIntoView({
+              behavior: "smooth",
+              block: "start",
             });
-
-            document.getElementById('results-section').classList.remove('hidden');
-            setTimeout(() => {
-                document.getElementById('results-section').scrollIntoView({behavior: 'smooth', block: 'start'});
-            }, 100);
+          }, 100);
         }
-        
+
+        // --- Visual Effects ---
         function revealTarget() {
-            document.querySelector('.gift-box').style.display = 'none';
-            document.getElementById('target-reveal').style.display = 'block';
-            createConfetti();
+          elements.display.giftBox.style.display = "none";
+          elements.display.revealArea.classList.remove("hidden");
+          createConfetti();
         }
 
-        function copyLink(text) {
-            navigator.clipboard.writeText(text).then(() => {
-                const toast = document.getElementById('toast');
-                toast.classList.add('show');
-                setTimeout(() => toast.classList.remove('show'), 2000);
+        function createSnowEffect() {
+          const count = 50;
+          for (let i = 0; i < count; i++) {
+            const snowflake = document.createElement("div");
+            snowflake.classList.add("snowflake");
+            snowflake.textContent = "❄";
+            snowflake.style.left = Math.random() * 100 + "vw";
+            snowflake.style.animationDuration = Math.random() * 3 + 2 + "s";
+            snowflake.style.fontSize = Math.random() * 10 + 10 + "px";
+            elements.snowContainer.appendChild(snowflake);
+          }
+        }
+
+        function createConfetti() {
+          const colors = ["#D42426", "#165B33", "#F8B229"];
+          for (let i = 0; i < 30; i++) {
+            const el = document.createElement("div");
+            Object.assign(el.style, {
+              position: "fixed",
+              top: "50%",
+              left: "50%",
+              width: "10px",
+              height: "10px",
+              backgroundColor:
+                colors[Math.floor(Math.random() * colors.length)],
+              zIndex: "100",
+            });
+
+            document.body.appendChild(el);
+
+            const angle = Math.random() * 360;
+            const velocity = Math.random() * 200 + 50;
+            const rad = angle * (Math.PI / 180);
+            const x = Math.cos(rad) * velocity;
+            const y = Math.sin(rad) * velocity;
+
+            const animation = el.animate(
+              [
+                { transform: `translate(0,0)` },
+                { transform: `translate(${x}px, ${y}px)`, opacity: 0 },
+              ],
+              { duration: 1000, easing: "ease-out" }
+            );
+
+            animation.onfinish = () => el.remove();
+          }
+        }
+
+        // --- Helpers ---
+        function copyToClipboard(text) {
+          navigator.clipboard
+            .writeText(text)
+            .then(() => {
+              const t = elements.toast;
+              t.classList.add("show");
+              setTimeout(() => t.classList.remove("show"), 2000);
+            })
+            .catch((err) => {
+              console.error("Failed to copy", err);
+              prompt("Skopiuj link ręcznie:", text);
             });
         }
 
-        function createSnow() {
-            const container = document.getElementById('snow-container');
-            const numberOfSnowflakes = 50;
-            for (let i = 0; i < numberOfSnowflakes; i++) {
-                const div = document.createElement('div');
-                div.classList.add('snowflake');
-                div.innerHTML = '❄';
-                div.style.left = Math.random() * 100 + 'vw';
-                div.style.animationDuration = Math.random() * 3 + 2 + 's';
-                div.style.fontSize = Math.random() * 10 + 10 + 'px';
-                container.appendChild(div);
-            }
+        function showError(msg) {
+          elements.display.error.textContent = msg;
+          elements.display.error.classList.remove("hidden");
         }
-        
-        function createConfetti() {
-            const colors = ['#D42426', '#165B33', '#F8B229'];
-            for(let i=0; i<30; i++) {
-                const el = document.createElement('div');
-                el.style.position = 'fixed';
-                el.style.top = '50%';
-                el.style.left = '50%';
-                el.style.width = '10px';
-                el.style.height = '10px';
-                el.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
-                el.style.zIndex = 100;
-                document.body.appendChild(el);
-                const angle = Math.random() * 360;
-                const velocity = Math.random() * 200 + 50;
-                const animation = el.animate([
-                    { transform: `translate(0,0)` },
-                    { transform: `translate(${Math.cos(angle)*velocity}px, ${Math.sin(angle)*velocity}px)`, opacity: 0 }
-                ], { duration: 1000, easing: 'ease-out' });
-                animation.onfinish = () => el.remove();
-            }
+
+        function escapeHtml(text) {
+          const map = {
+            "&": "&amp;",
+            "<": "&lt;",
+            ">": "&gt;",
+            '"': "&quot;",
+            "'": "&#039;",
+          };
+          return text.replace(/[&<>"']/g, (m) => map[m]);
         }
+      });
     </script>
-</body>
+  </body>
 </html>
