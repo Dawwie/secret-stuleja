@@ -1,7 +1,16 @@
-# 🎅 Secret Santa Generator
+# 🎅 Secret Santa Generator 3000™
 ### *Because drawing names from a hat is so 1999.*
 
 ![License](https://img.shields.io/badge/license-MIT-green) ![Christmas Spirit](https://img.shields.io/badge/Christmas%20Spirit-Overloading-red) ![Dependencies](https://img.shields.io/badge/Dependencies-0-blue)
+
+## 🔗 Try it Live!
+
+Too lazy to download a file? We got you.
+**Click here to start ruining Christmas immediately:**
+
+### 👉 [https://dawwie.github.io/secret-stuleja/](https://dawwie.github.io/secret-stuleja/)
+
+---
 
 ## 🧐 What is this?
 
@@ -19,9 +28,9 @@ It is a simple, client-side web application that pairs people up for gift exchan
 *   **🎈 Confetti Explosion:** Because nothing says "You have to spend $20" like digital confetti.
 *   **📱 Mobile Friendly:** Works on your phone, so you can organize this while hiding in the bathroom during Thanksgiving dinner.
 
-## 🚀 How to Run
+## 🚀 How to Run (Locally)
 
-This project is built with the "Holy Trinity" of web development: **HTML**, **CSS**, and **Vanilla JavaScript**.
+If you are a nerd and want to run this offline:
 
 1.  **Download** the `index.html` file.
 2.  **Double click** it.
